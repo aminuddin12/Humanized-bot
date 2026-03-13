@@ -1,38 +1,26 @@
-<script setup>
-import { computed } from 'vue'
-import { twMerge } from 'tailwind-merge'
-import { clsx } from 'clsx'
-import config from '@/configs/ui/base-card.json'
+<script setup lang="ts">
+import config from '~/configs/ui/base-card.json'
+import { resolveStyles } from '~/utils/ui'
 
-const props = defineProps({
-  variant: {
-    type: String,
-    default: 'default'
-  },
-  padding: {
-    type: String,
-    default: 'md'
-  },
-  radius: {
-    type: String,
-    default: '2xl'
-  }
+interface Props {
+  variant?: string
+  padding?: string
+  radius?: string
+  as?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'default',
+  padding: 'md',
+  radius: '2xl',
+  as: 'div'
 })
 
-const classes = computed(() => {
-  return twMerge(
-    clsx(
-      config.base,
-      config.variants.variant[props.variant] || config.variants.variant[config.defaultVariants.variant],
-      config.variants.padding[props.padding] || config.variants.padding[config.defaultVariants.padding],
-      config.variants.radius[props.radius] || config.variants.radius[config.defaultVariants.radius]
-    )
-  )
-})
+const classes = computed(() => resolveStyles(config, props))
 </script>
 
 <template>
-  <div :class="classes">
+  <component :is="as" :class="classes">
     <slot />
-  </div>
+  </component>
 </template>

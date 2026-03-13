@@ -1,0 +1,108 @@
+enum BehaviorMode {
+  STRICT
+  CREATIVE
+}
+
+enum MatchType {
+  EXACT
+  CONTAINS
+  REGEX
+}
+
+enum TrainingStatus {
+  TRAINED
+  PENDING
+}
+
+model BotInstance {
+  id              String       @id @default(uuid()) @db.Uuid
+  user_id         String       @db.Uuid
+  wa_device_id    String?      @unique @db.Uuid
+  name            String
+  is_active       Boolean      @default(true)
+  behavior_mode   BehaviorMode @default(STRICT)
+  typing_delay_ms Int          @default(2000)
+  created_at      DateTime     @default(now())
+
+  user              User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  wa_device         WaDevice?         @relation(fields: [wa_device_id], references: [id], onDelete: SetNull)
+  bot_rules         BotRule[]
+  bot_auto_replies  BotAutoReply[]
+  ai_token_logs     AiTokenLog[]
+  bot_training_data BotTrainingData[]
+
+  @@index([user_id])
+  @@map("bot_instances")
+}
+
+model BotRule {
+  id             String    @id @default(uuid()) @db.Uuid
+  bot_id         String    @db.Uuid
+  prefix_trigger String
+  description    String?
+  match_type     MatchType @default(EXACT)
+
+  bot         BotInstance @relation(fields: [bot_id], references: [id], onDelete: Cascade)
+  bot_prompts BotPrompt[]
+
+  @@index([bot_id])
+  @@map("bot_rules")
+}
+
+model BotPrompt {
+  id                 String  @id @default(uuid()) @db.Uuid
+  rule_id            String  @unique @db.Uuid
+  system_instruction String  @db.Text
+  language           String  @default("id")
+  temperature        Float   @default(0.7)
+  max_tokens         Int     @default(1000)
+
+  rule               BotRule @relation(fields: [rule_id], references: [id], onDelete: Cascade)
+
+  @@map("bot_prompts")
+}
+
+model BotAutoReply {
+  id             String  @id @default(uuid()) @db.Uuid
+  bot_id         String  @db.Uuid
+  keyword        String
+  reply_text     String  @db.Text
+  attachment_url String? @db.Text
+
+  bot            BotInstance @relation(fields: [bot_id], references: [id], onDelete: Cascade)
+
+  @@index([bot_id])
+  @@map("bot_auto_replies")
+}
+
+model AiTokenLog {
+  id                String   @id @default(uuid()) @db.Uuid
+  user_id           String   @db.Uuid
+  bot_id            String?  @db.Uuid
+  prompt_tokens     Int
+  completion_tokens Int
+  total_tokens      Int
+  provider          String   @default("Gemini")
+  created_at        DateTime @default(now())
+
+  user              User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bot               BotInstance? @relation(fields: [bot_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([bot_id])
+  @@map("ai_token_logs")
+}
+
+model BotTrainingData {
+  id           String         @id @default(uuid()) @db.Uuid
+  bot_id       String         @db.Uuid
+  document_url String?        @db.Text
+  text_content String?        @db.Text
+  status       TrainingStatus @default(PENDING)
+  created_at   DateTime       @default(now())
+
+  bot          BotInstance    @relation(fields: [bot_id], references: [id], onDelete: Cascade)
+
+  @@index([bot_id])
+  @@map("bot_training_data")
+}

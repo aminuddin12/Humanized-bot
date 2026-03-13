@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  password      String
+  planId        String?
+  plan          SubscriptionPlan? @relation(fields: [planId], references: [id])
+  botSettings   BotSetting[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SubscriptionPlan {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  price         Float
+  limitContacts Int
+  features      String[]
+  users         User[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BotSetting {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  botName       String
+  isActive      Boolean  @default(true)
+  webhookUrl    String?
+  config        Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

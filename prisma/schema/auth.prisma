@@ -1,0 +1,158 @@
+enum RoleName {
+  TESTER
+  CLIENT
+  DEVELOPER
+  SUPER_ADMIN
+}
+
+enum PermissionAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  EXECUTE
+}
+
+enum OtpType {
+  SMS
+  EMAIL
+  WA
+}
+
+model User {
+  id                 String    @id @default(uuid()) @db.Uuid
+  name               String
+  email              String    @unique
+  password_hash      String
+  phone              String?   @unique
+  is_verified        Boolean   @default(false)
+  two_fa_enabled     Boolean   @default(false)
+  two_fa_secret      String?
+  current_tenant_id  String?   @db.Uuid
+  status             Boolean   @default(true)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+
+  user_roles            UserRole[]
+  user_sessions         UserSession[]
+  otps                  Otp[]
+  social_logins         SocialLogin[]
+  subscriptions         Subscription[]
+  invoices              Invoice[]
+  usage_metrics         UsageMetric[]
+  wa_devices            WaDevice[]
+  contacts              Contact[]
+  contact_tags          ContactTag[]
+  contact_custom_fields ContactCustomField[]
+  bot_instances         BotInstance[]
+  ai_token_logs         AiTokenLog[]
+  pages                 Page[]
+  media_library         MediaLibrary[]
+  api_keys              ApiKey[]
+  webhooks              Webhook[]
+  google_integrations   GoogleIntegration[]
+  audit_logs            AuditLog[]
+  user_notifications    UserNotification[]
+
+  @@index([email])
+  @@index([phone])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        RoleName @unique
+  description String?
+  is_system   Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  role_permissions RolePermission[]
+  user_roles       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id               String           @id @default(uuid()) @db.Uuid
+  module_name      String
+  action           PermissionAction
+  description      String?
+  created_at       DateTime         @default(now())
+
+  role_permissions RolePermission[]
+
+  @@unique([module_name, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id            String     @id @default(uuid()) @db.Uuid
+  role_id       String     @db.Uuid
+  permission_id String     @db.Uuid
+
+  role          Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@index([role_id])
+  @@index([permission_id])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id      String @id @default(uuid()) @db.Uuid
+  user_id String @db.Uuid
+  role_id String @db.Uuid
+
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([role_id])
+  @@map("user_roles")
+}
+
+model UserSession {
+  id            String   @id @default(uuid()) @db.Uuid
+  user_id       String   @db.Uuid
+  device_info   String?
+  ip_address    String?
+  refresh_token String   @unique
+  expires_at    DateTime
+  created_at    DateTime @default(now())
+
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([refresh_token])
+  @@map("user_sessions")
+}
+
+model Otp {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @db.Uuid
+  code       String
+  type       OtpType
+  expires_at DateTime
+  is_used    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, code])
+  @@map("otps")
+}
+
+model SocialLogin {
+  id           String   @id @default(uuid()) @db.Uuid
+  user_id      String   @db.Uuid
+  provider     String
+  provider_id  String
+  access_token String?  @db.Text
+  created_at   DateTime @default(now())
+
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_id])
+  @@index([user_id])
+  @@map("social_logins")
+}

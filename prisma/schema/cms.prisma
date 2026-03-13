@@ -1,0 +1,135 @@
+enum BlockType {
+  HERO
+  FEATURE
+  FAQ
+}
+
+enum MenuPosition {
+  HEADER
+  FOOTER
+  SIDEBAR
+  DOCS
+}
+
+enum TargetType {
+  BLANK
+  SELF
+}
+
+model Page {
+  id            String   @id @default(uuid()) @db.Uuid
+  slug          String   @unique
+  is_published  Boolean  @default(false)
+  author_id     String   @db.Uuid
+  template_type String   @default("default")
+  created_at    DateTime @default(now())
+
+  author            User              @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  page_translations PageTranslation[]
+  page_seo          PageSeo[]
+  page_blocks       PageBlock[]
+
+  @@index([author_id])
+  @@map("pages")
+}
+
+model PageTranslation {
+  id           String  @id @default(uuid()) @db.Uuid
+  page_id      String  @db.Uuid
+  lang_code    String
+  title        String
+  content_json Json
+  is_active    Boolean @default(true)
+
+  page         Page    @relation(fields: [page_id], references: [id], onDelete: Cascade)
+
+  @@unique([page_id, lang_code])
+  @@map("page_translations")
+}
+
+model PageSeo {
+  id               String  @id @default(uuid()) @db.Uuid
+  page_id          String  @db.Uuid
+  lang_code        String
+  meta_title       String
+  meta_description String  @db.Text
+  canonical_url    String?
+  og_image         String?
+  schema_markup    Json?
+  focus_keyword    String?
+
+  page             Page    @relation(fields: [page_id], references: [id], onDelete: Cascade)
+
+  @@unique([page_id, lang_code])
+  @@map("page_seo")
+}
+
+model PageBlock {
+  id          String    @id @default(uuid()) @db.Uuid
+  page_id     String    @db.Uuid
+  lang_code   String
+  block_type  BlockType
+  order_index Int       @default(0)
+  settings    Json
+
+  page        Page      @relation(fields: [page_id], references: [id], onDelete: Cascade)
+
+  @@index([page_id, lang_code])
+  @@map("page_blocks")
+}
+
+model Menu {
+  id       String       @id @default(uuid()) @db.Uuid
+  name     String
+  position MenuPosition
+
+  menu_items MenuItem[]
+
+  @@map("menus")
+}
+
+model MenuItem {
+  id          String     @id @default(uuid()) @db.Uuid
+  menu_id     String     @db.Uuid
+  parent_id   String?    @db.Uuid
+  label       String
+  url         String
+  icon        String?
+  order_index Int        @default(0)
+  target      TargetType @default(SELF)
+
+  menu        Menu       @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+  parent      MenuItem?  @relation("SubMenus", fields: [parent_id], references: [id], onDelete: Cascade)
+  children    MenuItem[] @relation("SubMenus")
+
+  @@index([menu_id])
+  @@map("menu_items")
+}
+
+model Redirect {
+  id          String   @id @default(uuid()) @db.Uuid
+  old_url     String   @unique
+  new_url     String
+  status_code Int      @default(301)
+  created_at  DateTime @default(now())
+
+  @@index([old_url])
+  @@map("redirects")
+}
+
+model MediaLibrary {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  file_name   String
+  file_url    String   @db.Text
+  mime_type   String
+  size        Int
+  alt_text    String?
+  folder_name String?  @default("root")
+  created_at  DateTime @default(now())
+
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("media_library")
+}

@@ -1,83 +1,55 @@
-<script setup>
-import BaseButton from '@/components/ui/BaseButton.vue'
+<script setup lang="ts">
+import BaseContainer from '~/components/ui/BaseContainer.vue'
+import BaseBox from '~/components/ui/BaseBox.vue'
+import BaseTypography from '~/components/ui/BaseTypography.vue'
+import BaseGrid from '~/components/ui/BaseGrid.vue'
 
-defineProps({
-  logoLabel: {
-    type: String,
-    default: 'Klinik'
-  },
-  tagline: {
-    type: String,
-    required: true
-  },
-  services: {
-    type: Array,
-    required: true
-  },
-  companyLinks: {
-    type: Array,
-    required: true
-  },
-  socialLinks: {
-    type: Array,
-    default: () => []
-  }
-})
+const currentYear = new Date().getFullYear()
+
+const footerLinks = [
+  { title: 'Product', items: ['Features', 'Pricing', 'Integrations', 'Changelog'] },
+  { title: 'Company', items: ['About Us', 'Careers', 'Contact', 'Blog'] },
+  { title: 'Resources', items: ['Documentation', 'API Reference', 'Status', 'Privacy'] }
+]
 </script>
 
 <template>
-  <footer class="bg-white dark:bg-[#070f0c] border-t border-gray-200 dark:border-dark-border pt-16 pb-8 px-6 md:px-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-      <div class="md:col-span-1">
-        <NuxtLink to="/" class="flex items-center gap-2 font-black text-2xl tracking-tighter text-alan-dark dark:text-white mb-4">
-          <UIcon name="i-fluent-leaf-two-24-filled" class="text-alan-accent" /> {{ logoLabel }}<span class="text-alan-accent">.</span>
-        </NuxtLink>
-        <p class="text-xs text-gray-500 leading-relaxed mb-6">{{ tagline }}</p>
-        <div class="flex gap-4 text-gray-400">
-          <NuxtLink v-for="social in socialLinks" :key="social.icon" :to="social.to" class="hover:text-alan-dark dark:hover:text-white transition-colors">
-            <UIcon :name="'i-mdi-' + social.icon" class="text-xl" />
+  <BaseBox as="footer" background="white" class="border-t border-gray-100 dark:border-dark-border">
+    <BaseContainer padding="sm">
+      <BaseGrid cols="4" gap="lg">
+        <BaseBox display="flex" flexDirection="col" gap="sm">
+          <NuxtLink to="/" class="flex items-center gap-2">
+            <BaseTypography variant="h3" as="span" class="text-xl tracking-tighter">SaaS<BaseTypography variant="span" color="accent">Bot</BaseTypography></BaseTypography>
           </NuxtLink>
-        </div>
-      </div>
-      
-      <div>
-        <h4 class="font-black text-sm text-alan-dark dark:text-white uppercase tracking-widest mb-4">Layanan</h4>
-        <ul class="space-y-3 text-xs font-medium text-gray-500">
-          <li v-for="service in services" :key="service.label">
-            <NuxtLink :to="service.to" class="hover:text-alan-accent transition-colors">{{ service.label }}</NuxtLink>
-          </li>
-        </ul>
-      </div>
+          <BaseTypography variant="p" class="text-sm">
+            Scale your customer interactions with our smart humanized bot engine.
+          </BaseTypography>
+        </BaseBox>
 
-      <div>
-        <h4 class="font-black text-sm text-alan-dark dark:text-white uppercase tracking-widest mb-4">Perusahaan</h4>
-        <ul class="space-y-3 text-xs font-medium text-gray-500">
-          <li v-for="link in companyLinks" :key="link.label">
-            <NuxtLink :to="link.to" class="hover:text-alan-accent transition-colors">{{ link.label }}</NuxtLink>
-          </li>
-        </ul>
-      </div>
+        <BaseBox v-for="section in footerLinks" :key="section.title" display="flex" flexDirection="col" gap="sm">
+          <BaseTypography variant="detail">{{ section.title }}</BaseTypography>
+          <BaseBox as="ul" display="flex" flexDirection="col" gap="none">
+            <BaseBox as="li" v-for="item in section.items" :key="item">
+              <NuxtLink to="#" class="group">
+                <BaseTypography variant="p" color="muted" class="text-xs group-hover:text-alan-dark dark:group-hover:text-white transition-colors py-1">
+                  {{ item }}
+                </BaseTypography>
+              </NuxtLink>
+            </BaseBox>
+          </BaseBox>
+        </BaseBox>
+      </BaseGrid>
 
-      <div>
-        <h4 class="font-black text-sm text-alan-dark dark:text-white uppercase tracking-widest mb-4">Dapatkan Aplikasi</h4>
-        <p class="text-xs text-gray-500 mb-4">Konsultasi lebih mudah lewat genggaman tangan.</p>
-        <div class="space-y-3">
-          <BaseButton variant="dark" class="w-full">
-            <UIcon name="i-mdi-apple" class="text-lg" /> App Store
-          </BaseButton>
-          <BaseButton variant="gray" class="w-full">
-            <UIcon name="i-mdi-google-play" class="text-lg" /> Google Play
-          </BaseButton>
-        </div>
-      </div>
-    </div>
-    
-    <div class="pt-8 border-t border-gray-100 dark:border-dark-border flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-gray-400">
-      <p>&copy; 2026 Klinik Plus Technology. Hak Cipta Dilindungi.</p>
-      <div class="flex gap-4">
-        <NuxtLink to="/privacy" class="hover:text-alan-dark dark:hover:text-white">Kebijakan Privasi</NuxtLink>
-        <NuxtLink to="/terms" class="hover:text-alan-dark dark:hover:text-white">Syarat & Ketentuan</NuxtLink>
-      </div>
-    </div>
-  </footer>
+      <BaseBox display="flex" alignItems="center" justifyContent="between" class="mt-20 pt-8 border-t border-gray-100 dark:border-dark-border">
+        <BaseTypography variant="detail" color="muted" class="text-[9px]">
+          &copy; {{ currentYear }} SaaS Bot Engine. All Rights Reserved.
+        </BaseTypography>
+        <BaseBox display="flex" gap="sm">
+          <UIcon name="i-fa6-brands-twitter" class="text-alan-text-muted hover:text-alan-dark transition-colors" />
+          <UIcon name="i-fa6-brands-instagram" class="text-alan-text-muted hover:text-alan-dark transition-colors" />
+          <UIcon name="i-fa6-brands-linkedin" class="text-alan-text-muted hover:text-alan-dark transition-colors" />
+        </BaseBox>
+      </BaseBox>
+    </BaseContainer>
+  </BaseBox>
 </template>

@@ -2,9 +2,10 @@
   "base": "transition-all duration-300 relative overflow-hidden",
   "variants": {
     "variant": {
-      "default": "bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border shadow-sm",
-      "glass": "glass-header backdrop-blur-2xl",
-      "surface": "bg-gray-50 dark:bg-dark-bg border border-gray-100 dark:border-dark-border shadow-inner"
+      "default": "bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm",
+      "glass": "bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl border border-white/20 dark:border-gray-800",
+      "surface": "bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-inner",
+      "featured": "bg-gray-900 dark:bg-black border-2 border-emerald-500 shadow-glow text-white"
     },
     "padding": {
       "none": "",

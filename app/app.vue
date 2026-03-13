@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} | Klinik+` : 'Klinik+ | Layanan Kesehatan Bertenaga AI Masa Depan'
+    return titleChunk ? `${titleChunk} | SaaS Bot` : 'SaaS Bot | Smart Humanized Bot Engine'
   },
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'description', content: 'Konsultasi medis tanpa batas waktu. Mulai dari pengecekan gejala awal berbasis AI hingga panggilan video dengan dokter spesialis.' }
+    { name: 'description', content: 'Scale your customer interactions with our smart humanized bot engine. Automate CS 24/7 and integrate with Google Services.' }
   ],
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

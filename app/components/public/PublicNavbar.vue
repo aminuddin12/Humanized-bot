@@ -1,57 +1,48 @@
-<script setup>
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import { usePublicData } from '@/composables/usePublicData'
+<script setup lang="ts">
+import BaseContainer from '~/components/ui/BaseContainer.vue'
+import BaseBox from '~/components/ui/BaseBox.vue'
+import BaseTypography from '~/components/ui/BaseTypography.vue'
+import BaseButton from '~/components/ui/BaseButton.vue'
+import { usePublicData } from '~/composables/usePublicData'
 
-defineProps({
-  menuItems: {
-    type: Array,
-    required: true
-  },
-  logoLabel: {
-    type: String,
-    default: 'Klinik'
-  }
-})
+const { toggleDark, isDark } = usePublicData()
 
-const { isDark, toggleDark } = usePublicData()
+const navLinks = [
+  { label: 'Features', to: '#features' },
+  { label: 'Pricing', to: '#pricing' },
+  { label: 'Integrations', to: '#integrations' },
+  { label: 'Docs', to: '/docs' }
+]
 </script>
 
 <template>
-  <BaseCard as="header" variant="glass" radius="none" class="fixed top-0 left-0 right-0 h-20 z-50 p-0">
-    <div class="max-w-7xl mx-auto px-6 md:px-10 h-full flex items-center justify-between">
-      <NuxtLink to="/" class="flex items-center gap-2 font-black text-2xl tracking-tighter text-alan-dark dark:text-white group z-10">
-        <div class="w-10 h-10 bg-alan-surface dark:bg-dark-surface rounded-xl flex items-center justify-center group-hover:bg-alan-accent transition-colors duration-300 shadow-sm border border-transparent dark:border-dark-border">
-          <UIcon name="i-fluent-leaf-two-24-filled" class="text-alan-accent group-hover:text-white text-xl transition-colors" />
-        </div>
-        {{ logoLabel }}<span class="text-alan-accent">.</span>
-      </NuxtLink>
-
-      <nav class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-        <NuxtLink
-          v-for="item in menuItems"
-          :key="item.label"
-          :to="item.to"
-          class="text-sm font-bold transition-colors"
-          active-class="text-alan-accent"
-          inactive-class="text-alan-text-muted hover:text-alan-dark dark:text-gray-400 dark:hover:text-white"
-        >
-          {{ item.label }}
+  <BaseBox as="header" position="fixed" class="top-0 left-0 right-0 z-50 w-full bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-100 dark:border-dark-border">
+    <BaseContainer padding="none" class="h-20 flex items-center justify-between">
+      <BaseBox as="nav" display="flex" alignItems="center" gap="lg">
+        <NuxtLink to="/" class="flex items-center gap-2">
+          <BaseBox background="dark" rounded="xl" display="flex" alignItems="center" justifyContent="center" class="w-10 h-10">
+            <UIcon name="i-fluent-bot-24-filled" class="text-xl text-emerald-500" />
+          </BaseBox>
+          <BaseTypography variant="h3" as="span" class="text-xl tracking-tighter">SaaS<BaseTypography variant="span" color="accent">Bot</BaseTypography></BaseTypography>
         </NuxtLink>
-      </nav>
 
-      <div class="flex items-center gap-4 z-10">
-        <button @click="toggleDark" class="w-10 h-10 rounded-full bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border text-alan-text-muted dark:text-gray-400 flex items-center justify-center hover:text-alan-dark dark:hover:text-white transition-colors shadow-sm group">
-          <UIcon :name="isDark ? 'i-fluent-weather-moon-24-filled' : 'i-fluent-weather-sunny-24-filled'" class="text-xl group-hover:rotate-45 transition-transform" />
-        </button>
-        <div class="hidden sm:flex items-center gap-3">
-          <BaseButton variant="ghost" size="sm" to="/auth/login">Masuk</BaseButton>
-          <BaseButton variant="secondary" size="md" to="/auth/register">Daftar</BaseButton>
-        </div>
-        <button class="md:hidden text-2xl text-alan-dark dark:text-white">
-          <UIcon name="i-fluent-line-horizontal-3-20-regular" />
-        </button>
-      </div>
-    </div>
-  </BaseCard>
+        <BaseBox display="flex" alignItems="center" gap="md" class="hidden md:flex">
+          <NuxtLink v-for="link in navLinks" :key="link.label" :to="link.to" class="group">
+            <BaseTypography variant="detail" color="muted" class="group-hover:text-alan-dark dark:group-hover:text-white transition-colors">
+              {{ link.label }}
+            </BaseTypography>
+          </NuxtLink>
+        </BaseBox>
+      </BaseBox>
+
+      <BaseBox display="flex" alignItems="center" gap="sm">
+        <BaseButton variant="ghost" size="sm" @click="toggleDark">
+          <UIcon :name="isDark ? 'i-fluent-weather-sunny-24-filled' : 'i-fluent-weather-moon-24-filled'" class="text-xl" />
+        </BaseButton>
+        <BaseButton size="sm" class="hidden sm:flex" to="/demo">
+          Try Demo
+        </BaseButton>
+      </BaseBox>
+    </BaseContainer>
+  </BaseBox>
 </template>

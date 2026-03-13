@@ -1,0 +1,178 @@
+enum WaDeviceStatus {
+  CONNECTED
+  DISCONNECTED
+}
+
+enum CustomFieldType {
+  TEXT
+  DATE
+  NUMBER
+}
+
+enum ThreadStatus {
+  OPEN
+  RESOLVED
+  IGNORED
+}
+
+enum SenderType {
+  BOT
+  HUMAN
+  CONTACT
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  BUTTON
+  LIST
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+model WaDevice {
+  id            String         @id @default(uuid()) @db.Uuid
+  user_id       String         @db.Uuid
+  phone_number  String
+  session_data  Json?
+  status        WaDeviceStatus @default(DISCONNECTED)
+  last_sync     DateTime?
+  created_at    DateTime       @default(now())
+
+  user          User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  chat_threads  ChatThread[]
+  bot_instances BotInstance[]
+
+  @@index([user_id])
+  @@index([phone_number])
+  @@map("wa_devices")
+}
+
+model Contact {
+  id            String   @id @default(uuid()) @db.Uuid
+  user_id       String   @db.Uuid
+  phone_number  String
+  name          String
+  nickname      String?
+  email         String?
+  company       String?
+  locale        String   @default("id")
+  is_opted_out  Boolean  @default(false)
+  created_at    DateTime @default(now())
+
+  user                  User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  contact_tag_relations ContactTagRelation[]
+  contact_custom_values ContactCustomValue[]
+  chat_threads          ChatThread[]
+
+  @@unique([user_id, phone_number])
+  @@index([user_id])
+  @@index([phone_number])
+  @@map("contacts")
+}
+
+model ContactTag {
+  id      String @id @default(uuid()) @db.Uuid
+  user_id String @db.Uuid
+  name    String
+  color   String @default("#000000")
+
+  user                  User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  contact_tag_relations ContactTagRelation[]
+
+  @@unique([user_id, name])
+  @@map("contact_tags")
+}
+
+model ContactTagRelation {
+  contact_id String @db.Uuid
+  tag_id     String @db.Uuid
+
+  contact    Contact    @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  tag        ContactTag @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([contact_id, tag_id])
+  @@index([contact_id])
+  @@index([tag_id])
+  @@map("contact_tag_relations")
+}
+
+model ContactCustomField {
+  id         String          @id @default(uuid()) @db.Uuid
+  user_id    String          @db.Uuid
+  field_name String
+  field_type CustomFieldType
+
+  user                  User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  contact_custom_values ContactCustomValue[]
+
+  @@unique([user_id, field_name])
+  @@map("contact_custom_fields")
+}
+
+model ContactCustomValue {
+  id         String @id @default(uuid()) @db.Uuid
+  contact_id String @db.Uuid
+  field_id   String @db.Uuid
+  value      String @db.Text
+
+  contact    Contact            @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  field      ContactCustomField @relation(fields: [field_id], references: [id], onDelete: Cascade)
+
+  @@index([contact_id])
+  @@index([field_id])
+  @@map("contact_custom_values")
+}
+
+model ChatThread {
+  id           String       @id @default(uuid()) @db.Uuid
+  wa_device_id String       @db.Uuid
+  contact_id   String?      @db.Uuid
+  is_group     Boolean      @default(false)
+  status       ThreadStatus @default(OPEN)
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+
+  wa_device     WaDevice      @relation(fields: [wa_device_id], references: [id], onDelete: Cascade)
+  contact       Contact?      @relation(fields: [contact_id], references: [id], onDelete: SetNull)
+  chat_messages ChatMessage[]
+
+  @@index([wa_device_id])
+  @@index([contact_id])
+  @@map("chat_threads")
+}
+
+model ChatMessage {
+  id           String        @id @default(uuid()) @db.Uuid
+  thread_id    String        @db.Uuid
+  sender_type  SenderType
+  message_type MessageType
+  content      Json
+  status       MessageStatus
+  sent_at      DateTime      @default(now())
+
+  thread           ChatThread       @relation(fields: [thread_id], references: [id], onDelete: Cascade)
+  chat_attachments ChatAttachment[]
+
+  @@index([thread_id])
+  @@index([sent_at])
+  @@map("chat_messages")
+}
+
+model ChatAttachment {
+  id         String @id @default(uuid()) @db.Uuid
+  message_id String @db.Uuid
+  file_url   String @db.Text
+  file_type  String
+  file_size  Int
+
+  message    ChatMessage @relation(fields: [message_id], references: [id], onDelete: Cascade)
+
+  @@index([message_id])
+  @@map("chat_attachments")
+}

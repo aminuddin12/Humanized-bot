@@ -1,0 +1,20 @@
+{
+  "base": "flex items-center justify-center rounded-2xl transition-all duration-300",
+  "variants": {
+    "color": {
+      "emerald": "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500",
+      "blue": "bg-blue-50 dark:bg-blue-900/20 text-blue-500",
+      "dark": "bg-alan-dark text-white shadow-glow"
+    },
+    "size": {
+      "sm": "w-8 h-8 text-lg",
+      "md": "w-12 h-12 text-2xl",
+      "lg": "w-16 h-16 text-3xl",
+      "xl": "w-20 h-20 text-4xl"
+    }
+  },
+  "defaultVariants": {
+    "color": "emerald",
+    "size": "md"
+  }
+}

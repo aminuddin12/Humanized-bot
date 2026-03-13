@@ -1,107 +1,117 @@
-<script setup>
-import BaseButton from '@/components/ui/BaseButton.vue'
-import SectionWrapper from '@/components/ui/SectionWrapper.vue'
+<script setup lang="ts">
+import BaseButton from '~/components/ui/BaseButton.vue'
+import BaseContainer from '~/components/ui/BaseContainer.vue'
+import BaseGrid from '~/components/ui/BaseGrid.vue'
+import BaseBox from '~/components/ui/BaseBox.vue'
+import BaseSurface from '~/components/ui/BaseSurface.vue'
+import BaseTypography from '~/components/ui/BaseTypography.vue'
+import BaseBadge from '~/components/ui/BaseBadge.vue'
+import BaseIconWrapper from '~/components/ui/BaseIconWrapper.vue'
+import BaseImage from '~/components/ui/BaseImage.vue'
+import type { HeroContent } from '~/types'
 
-defineProps({
-  badgeText: {
-    type: String,
-    default: 'Klinik+ Engine v2.5 Online'
-  },
-  headline: {
-    type: String,
-    required: true
-  },
-  highlightedText: {
-    type: String,
-    required: true
-  },
-  subline: {
-    type: String,
-    required: true
-  },
-  primaryCta: {
-    type: Object,
-    default: () => ({ label: 'Cek Gejala Sekarang', to: '#triage' })
-  },
-  secondaryCta: {
-    type: Object,
-    default: () => ({ label: 'Buat Janji Temu', to: '#doctors' })
-  }
-})
+defineProps<HeroContent>()
 </script>
 
 <template>
-  <SectionWrapper class="pt-40 pb-20 md:pt-52 md:pb-32 min-h-[90vh] flex items-center">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
-      <div class="elem-anim space-y-8 z-10 relative">
-        <div class="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-4 py-2 rounded-full">
-          <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-          <span class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">{{ badgeText }}</span>
-        </div>
+  <BaseContainer padding="hero">
+    <BaseGrid cols="2" gap="lg" items="center">
+      <BaseBox display="flex" flexDirection="col" gap="md">
+        <BaseBadge color="emerald">
+          {{ badgeText }}
+        </BaseBadge>
         
-        <h1 class="text-5xl md:text-7xl font-black text-alan-dark dark:text-white tracking-tighter leading-[1.1]">
-          {{ headline }}<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-sky-500">{{ highlightedText }}</span>
-        </h1>
+        <BaseTypography variant="h1">
+          {{ headline }}<br />
+          <BaseTypography variant="span" color="gradient">{{ highlightedText }}</BaseTypography>
+        </BaseTypography>
         
-        <p class="text-lg md:text-xl text-alan-text-muted dark:text-gray-400 max-w-lg leading-relaxed">
+        <BaseTypography variant="p">
           {{ subline }}
-        </p>
+        </BaseTypography>
         
-        <div class="flex flex-col sm:flex-row gap-4 pt-4">
-          <BaseButton size="lg" :to="primaryCta.to" class="group">
+        <BaseBox display="flex" gap="sm">
+          <BaseButton size="lg" :to="primaryCta.to">
             {{ primaryCta.label }}
-            <UIcon name="i-fluent-arrow-right-24-filled" class="group-hover:translate-x-1 transition-transform" />
+            <UIcon name="i-fluent-arrow-right-24-filled" />
           </BaseButton>
           <BaseButton variant="white" size="lg" :to="secondaryCta.to">
-            <UIcon name="i-fluent-calendar-clock-24-regular" class="text-xl" /> {{ secondaryCta.label }}
+            <UIcon name="i-fluent-calendar-clock-24-regular" /> {{ secondaryCta.label }}
           </BaseButton>
-        </div>
+        </BaseBox>
 
-        <div class="pt-8 flex items-center gap-6 opacity-60">
-          <p class="text-[10px] font-bold text-alan-dark dark:text-white uppercase tracking-widest">Dipercaya Oleh</p>
-          <div class="flex gap-4 text-2xl text-alan-text-muted dark:text-gray-500">
-            <UIcon name="i-fluent-building-hospital-24-filled" />
-            <UIcon name="i-fluent-shield-task-24-filled" />
-            <UIcon name="i-fluent-data-usage-24-filled" />
-          </div>
-        </div>
-      </div>
+        <BaseBox display="flex" alignItems="center" gap="md">
+          <BaseTypography variant="detail" color="muted">Integrasi Utama</BaseTypography>
+          <BaseBox display="flex" gap="sm">
+            <UIcon name="i-fluent-spreadsheet-24-filled" class="text-2xl text-emerald-500" />
+            <UIcon name="i-fluent-calendar-ltr-24-filled" class="text-2xl text-blue-500" />
+            <UIcon name="i-fluent-cloud-24-filled" class="text-2xl text-sky-500" />
+          </BaseBox>
+        </BaseBox>
+      </BaseBox>
 
-      <div class="relative h-[400px] md:h-[500px] flex items-center justify-center elem-anim z-10 hidden lg:flex">
-        <div class="absolute w-64 h-64 rounded-full bg-gradient-to-tr from-emerald-400 to-sky-400 opacity-20 blur-3xl"></div>
-        <div class="absolute w-48 h-48 rounded-[3rem] bg-white dark:bg-dark-surface border-4 border-white dark:border-dark-surface shadow-floating flex flex-col items-center justify-center transform rotate-12 float-slow z-20">
-          <UIcon name="i-fluent-heart-pulse-32-filled" class="text-6xl text-emerald-500 mb-2" />
-          <p class="font-black text-alan-dark dark:text-white text-lg">Vital Status</p>
-          <p class="text-xs font-bold text-emerald-500">Normal</p>
-        </div>
+      <BaseBox display="flex" alignItems="center" justifyContent="center">
+        <BaseSurface effects="blur-3xl" position="absolute" inset="center" />
+        
+        <!-- Bot Performance Card -->
+        <BaseSurface 
+          background="white" 
+          elevation="floating" 
+          rounded="2xl" 
+          as="div"
+          class="w-56 h-56 border border-gray-100 dark:border-gray-800 rotate-6 p-6 flex flex-col items-center justify-center animate-float-slow"
+        >
+          <BaseSurface background="emerald" rounded="full" class="w-16 h-16 flex items-center justify-center mb-4">
+            <BaseIconWrapper icon="i-fluent-flash-24-filled" color="white" size="lg" />
+          </BaseSurface>
+          <BaseTypography variant="h3" class="text-xl">99.9%</BaseTypography>
+          <BaseTypography variant="detail" color="accent">Bot Uptime</BaseTypography>
+        </BaseSurface>
 
-        <div class="absolute top-[10%] left-[-10%] w-56 bg-white dark:bg-[#121c18] border border-gray-100 dark:border-emerald-900/30 rounded-2xl p-4 shadow-floating float-fast z-30" style="animation-delay: -2s;">
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <img src="https://i.pravatar.cc/100?img=5" class="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700">
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-[#121c18] rounded-full"></div>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-alan-dark dark:text-white">dr. Sarah Wijaya</p>
-              <p class="text-[9px] text-gray-500">Spesialis Penyakit Dalam</p>
-            </div>
-          </div>
-          <div class="mt-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase text-center py-1.5 rounded-lg">
-            Tersedia Sekarang
-          </div>
-        </div>
+        <!-- User Status Card -->
+        <BaseSurface 
+          position="absolute" 
+          inset="floating-top-left" 
+          background="white" 
+          rounded="xl" 
+          elevation="floating" 
+          as="div"
+          class="w-64 p-5 border border-gray-100 dark:border-emerald-900/30 animate-float-fast"
+        >
+          <BaseBox display="flex" alignItems="center" gap="sm">
+            <BaseBox position="relative">
+              <BaseImage src="https://i.pravatar.cc/100?img=11" alt="User" rounded="full" class="w-10 h-10" />
+              <BaseSurface background="emerald" rounded="full" class="absolute bottom-0 right-0 w-3 h-3 border-2 border-white dark:border-dark-surface" />
+            </BaseBox>
+            <BaseBox display="flex" flexDirection="col">
+              <BaseTypography variant="detail" class="text-xs">User @0812XXX</BaseTypography>
+              <BaseTypography variant="detail" color="muted" class="text-[9px]">Verified Premium Account</BaseTypography>
+            </BaseBox>
+          </BaseBox>
+          <BaseSurface background="glass" rounded="md" class="mt-4 p-2 text-center border border-emerald-500/10">
+            <BaseTypography variant="detail" color="accent">AI Responding...</BaseTypography>
+          </BaseSurface>
+        </BaseSurface>
 
-        <div class="absolute bottom-[10%] right-[-10%] bg-alan-dark text-white rounded-2xl p-4 shadow-glow flex items-center gap-4 float-slow z-30" style="animation-delay: -1s;">
-          <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
-            <UIcon name="i-fluent-bot-24-filled" class="text-xl" />
-          </div>
-          <div>
-            <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-0.5">Analisis Selesai</p>
-            <p class="text-xs font-medium">Berdasarkan gejala Anda,<br>disarankan konsultasi umum.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </SectionWrapper>
+        <!-- AI Bot Node -->
+        <BaseSurface 
+          position="absolute" 
+          inset="floating-bottom-right" 
+          background="dark" 
+          rounded="xl" 
+          elevation="glow" 
+          as="div"
+          class="p-4 flex items-center gap-3 animate-float-slow"
+        >
+          <BaseSurface background="emerald" rounded="lg" class="p-2">
+            <BaseIconWrapper icon="i-fluent-bot-24-filled" color="white" size="sm" />
+          </BaseSurface>
+          <BaseBox display="flex" flexDirection="col">
+            <BaseTypography variant="detail" color="accent" class="mb-0.5">Automated CS</BaseTypography>
+            <BaseTypography variant="detail" class="text-white text-[10px]">Smart humanized reply sent!</BaseTypography>
+          </BaseBox>
+        </BaseSurface>
+      </BaseBox>
+    </BaseGrid>
+  </BaseContainer>
 </template>

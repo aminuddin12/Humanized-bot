@@ -1,0 +1,64 @@
+enum NotificationType {
+  EMAIL
+  IN_APP
+  WA
+}
+
+model SystemSetting {
+  id        String  @id @default(uuid()) @db.Uuid
+  group     String
+  key       String  @unique
+  value     Json
+  is_public Boolean @default(false)
+
+  @@index([group])
+  @@index([key])
+  @@map("system_settings")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String?  @db.Uuid
+  action      String
+  entity_type String
+  entity_id   String?
+  ip_address  String?
+  user_agent  String?
+  created_at  DateTime @default(now())
+
+  user        User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([action])
+  @@index([entity_type, entity_id])
+  @@map("audit_logs")
+}
+
+model NotificationTemplate {
+  id                 String             @id @default(uuid()) @db.Uuid
+  name               String             @unique
+  type               NotificationType
+  subject            String?
+  body_content       String             @db.Text
+  variables          String?
+
+  user_notifications UserNotification[]
+
+  @@map("notification_templates")
+}
+
+model UserNotification {
+  id          String               @id @default(uuid()) @db.Uuid
+  user_id     String               @db.Uuid
+  template_id String?              @db.Uuid
+  title       String
+  message     String               @db.Text
+  is_read     Boolean              @default(false)
+  sent_at     DateTime             @default(now())
+
+  user        User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  template    NotificationTemplate? @relation(fields: [template_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@map("user_notifications")
+}

@@ -1,0 +1,120 @@
+enum PlanStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+enum InvoiceStatus {
+  PAID
+  UNPAID
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model Plan {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  slug          String   @unique
+  description   String?
+  price_monthly Decimal  @db.Decimal(10, 2)
+  price_yearly  Decimal  @db.Decimal(10, 2)
+  trial_days    Int      @default(0)
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+
+  plan_features PlanFeature[]
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model PlanFeature {
+  id            String @id @default(uuid()) @db.Uuid
+  plan_id       String @db.Uuid
+  feature_key   String
+  feature_value String
+
+  plan          Plan   @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+
+  @@index([plan_id])
+  @@unique([plan_id, feature_key])
+  @@map("plan_features")
+}
+
+model Subscription {
+  id                   String     @id @default(uuid()) @db.Uuid
+  user_id              String     @db.Uuid
+  plan_id              String     @db.Uuid
+  status               PlanStatus @default(ACTIVE)
+  start_date           DateTime
+  end_date             DateTime
+  cancel_at_period_end Boolean    @default(false)
+  created_at           DateTime   @default(now())
+  updated_at           DateTime   @updatedAt
+
+  user                 User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  plan                 Plan       @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  invoices             Invoice[]
+
+  @@index([user_id])
+  @@index([plan_id])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id              String        @id @default(uuid()) @db.Uuid
+  user_id         String        @db.Uuid
+  subscription_id String?       @db.Uuid
+  invoice_number  String        @unique
+  amount          Decimal       @db.Decimal(10, 2)
+  tax             Decimal       @db.Decimal(10, 2) @default(0)
+  total           Decimal       @db.Decimal(10, 2)
+  status          InvoiceStatus @default(UNPAID)
+  due_date        DateTime
+  created_at      DateTime      @default(now())
+
+  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  subscription    Subscription? @relation(fields: [subscription_id], references: [id], onDelete: SetNull)
+  payments        Payment[]
+
+  @@index([user_id])
+  @@index([invoice_number])
+  @@map("invoices")
+}
+
+model Payment {
+  id              String        @id @default(uuid()) @db.Uuid
+  invoice_id      String        @db.Uuid
+  payment_gateway String
+  transaction_id  String        @unique
+  amount          Decimal       @db.Decimal(10, 2)
+  payment_method  String?
+  status          PaymentStatus @default(PENDING)
+  paid_at         DateTime?
+  created_at      DateTime      @default(now())
+
+  invoice         Invoice       @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+
+  @@index([invoice_id])
+  @@index([transaction_id])
+  @@map("payments")
+}
+
+model UsageMetric {
+  id            String   @id @default(uuid()) @db.Uuid
+  user_id       String   @db.Uuid
+  metric_key    String
+  current_value Int      @default(0)
+  reset_date    DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, metric_key])
+  @@map("usage_metrics")
+}

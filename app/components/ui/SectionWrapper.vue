@@ -1,23 +1,25 @@
-<script setup>
-import { twMerge } from 'tailwind-merge'
-import { clsx } from 'clsx'
+<script setup lang="ts">
+import config from '~/configs/ui/section-wrapper.json'
+import { useUI } from '~/utils/ui'
 
 const props = defineProps({
   as: {
     type: String,
     default: 'section'
   },
-  containerClass: {
-    type: String,
-    default: ''
+  size: {
+    type: String as () => 'sm' | 'md' | 'lg' | 'full',
+    default: 'lg'
   }
 })
+
+const ui = useUI(config, props)
 </script>
 
 <template>
-  <component :is="as" :class="twMerge('relative px-6 md:px-10', $attrs.class)">
-    <div :class="twMerge('max-w-7xl mx-auto', containerClass)">
+  <component :is="as" :class="ui.root">
+    <BaseContainer :size="size" :class="ui.container">
       <slot />
-    </div>
+    </BaseContainer>
   </component>
 </template>

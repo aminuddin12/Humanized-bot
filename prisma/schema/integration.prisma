@@ -1,0 +1,65 @@
+enum ServiceType {
+  DRIVE
+  CALENDAR
+  DOCS
+}
+
+model ApiKey {
+  id           String    @id @default(uuid()) @db.Uuid
+  user_id      String    @db.Uuid
+  name         String
+  key_hash     String    @unique
+  last_used_at DateTime?
+  expires_at   DateTime?
+  is_active    Boolean   @default(true)
+  created_at   DateTime  @default(now())
+
+  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([key_hash])
+  @@map("api_keys")
+}
+
+model Webhook {
+  id           String   @id @default(uuid()) @db.Uuid
+  user_id      String   @db.Uuid
+  event_name   String
+  endpoint_url String   @db.Text
+  secret       String?
+  is_active    Boolean  @default(true)
+
+  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  webhook_logs WebhookLog[]
+
+  @@index([user_id])
+  @@map("webhooks")
+}
+
+model WebhookLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  webhook_id    String   @db.Uuid
+  payload       Json
+  response_code Int?
+  response_body String?  @db.Text
+  executed_at   DateTime @default(now())
+
+  webhook       Webhook  @relation(fields: [webhook_id], references: [id], onDelete: Cascade)
+
+  @@index([webhook_id])
+  @@map("webhook_logs")
+}
+
+model GoogleIntegration {
+  id             String      @id @default(uuid()) @db.Uuid
+  user_id        String      @db.Uuid
+  service_type   ServiceType
+  sync_token     String?
+  root_folder_id String?
+  created_at     DateTime    @default(now())
+
+  user           User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, service_type])
+  @@map("google_integrations")
+}

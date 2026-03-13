@@ -1,37 +1,22 @@
-<script setup>
-import { computed } from 'vue'
-import { twMerge } from 'tailwind-merge'
-import { clsx } from 'clsx'
-import config from '@/configs/ui/base-button.json'
+<script setup lang="ts">
+import config from '~/configs/ui/base-button.json'
+import { resolveStyles } from '~/utils/ui'
 
-const props = defineProps({
-  variant: {
-    type: String,
-    default: 'primary'
-  },
-  size: {
-    type: String,
-    default: 'md'
-  },
-  to: {
-    type: String,
-    default: null
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  }
+interface Props {
+  variant?: string
+  size?: string
+  to?: string | null
+  disabled?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  size: 'md',
+  to: null,
+  disabled: false
 })
 
-const classes = computed(() => {
-  return twMerge(
-    clsx(
-      config.base,
-      config.variants.variant[props.variant] || config.variants.variant[config.defaultVariants.variant],
-      config.variants.size[props.size] || config.variants.size[config.defaultVariants.size]
-    )
-  )
-})
+const classes = computed(() => resolveStyles(config, props))
 </script>
 
 <template>

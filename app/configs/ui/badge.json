@@ -1,0 +1,19 @@
+{
+  "base": "inline-flex items-center gap-2 rounded-full px-4 py-2 border font-black uppercase tracking-widest text-[10px] transition-all duration-300",
+  "variants": {
+    "color": {
+      "emerald": "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400",
+      "blue": "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400",
+      "white": "bg-white dark:bg-dark-surface border-gray-200 dark:border-gray-800 text-alan-dark dark:text-white",
+      "red": "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"
+    },
+    "size": {
+      "sm": "px-3 py-1.5 text-[9px]",
+      "md": "px-4 py-2 text-[10px]"
+    }
+  },
+  "defaultVariants": {
+    "color": "emerald",
+    "size": "md"
+  }
+}

@@ -1,19 +1,40 @@
-<script setup>
-import PublicNavbar from '@/components/public/PublicNavbar.vue'
-import PublicFooter from '@/components/public/PublicFooter.vue'
+<script setup lang="ts">
+import GlobalHeader from '~/components/global/GlobalHeader.vue'
+import GlobalFooter from '~/components/global/GlobalFooter.vue'
+import BottomFooter from '~/components/global/BottomFooter.vue'
+import CookieConsent from '~/components/global/CookieConsent.vue'
+import SearchPopup from '~/components/global/SearchPopup.vue'
+import BaseBox from '~/components/ui/BaseBox.vue'
+import { useViewport } from '~/composables/useViewport'
 
-const menuItems = [
-  { label: 'Beranda', to: '/' },
-  { label: 'Cek Gejala AI', to: '#triage' },
-  { label: 'Dokter Spesialis', to: '#doctors' },
-  { label: 'Edukasi', to: '#articles' }
-]
+const { isDesktop, isTablet, isMobile } = useViewport()
+const isSearchOpen = ref(false)
+
+const toggleSearch = () => {
+  isSearchOpen.value = !isSearchOpen.value
+}
+
+provide('toggleSearch', toggleSearch)
 </script>
 
 <template>
-  <div class="bg-alan-bg text-alan-text dark:bg-dark-bg dark:text-dark-text transition-colors duration-500 relative min-h-screen">
-    <PublicNavbar :menu-items="menuItems" />
-    <slot />
-    <PublicFooter />
-  </div>
+  <BaseBox as="div" class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 relative min-h-screen">
+    
+    <GlobalHeader />
+
+    <!-- Main Content -->
+    <BaseBox 
+      as="main" 
+      class="min-h-screen transition-all duration-300 pt-24"
+    >
+      <slot />
+    </BaseBox>
+
+    <GlobalFooter />
+    <BottomFooter />
+    
+    <CookieConsent />
+    <SearchPopup :is-open="isSearchOpen" @close="isSearchOpen = false" />
+
+  </BaseBox>
 </template>

@@ -56,3 +56,20 @@ body {
 .typing-cursor { animation: blink 1s step-end infinite; }
 
 @keyframes blink { 50% { opacity: 0; } }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
