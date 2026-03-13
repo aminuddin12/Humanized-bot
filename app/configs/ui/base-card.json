@@ -1,0 +1,29 @@
+{
+  "base": "transition-all duration-300 relative overflow-hidden",
+  "variants": {
+    "variant": {
+      "default": "bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border shadow-sm",
+      "glass": "glass-header backdrop-blur-2xl",
+      "surface": "bg-gray-50 dark:bg-dark-bg border border-gray-100 dark:border-dark-border shadow-inner"
+    },
+    "padding": {
+      "none": "",
+      "sm": "p-4",
+      "md": "p-5",
+      "lg": "p-6",
+      "xl": "p-10"
+    },
+    "radius": {
+      "xl": "rounded-xl",
+      "2xl": "rounded-2xl",
+      "3xl": "rounded-3xl",
+      "full": "rounded-[2rem]",
+      "special": "rounded-[2.5rem]"
+    }
+  },
+  "defaultVariants": {
+    "variant": "default",
+    "padding": "md",
+    "radius": "2xl"
+  }
+}
