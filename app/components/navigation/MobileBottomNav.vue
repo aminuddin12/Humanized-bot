@@ -10,7 +10,7 @@ const { menuItems } = useNavigationData()
 
 <template>
   <BaseSurface 
-    variant="bottom" 
+    variant="bottom-nav" 
     as="nav" 
     class="fixed bottom-6 left-6 right-6 z-50 h-20 rounded-[2rem] shadow-floating flex items-center justify-around px-4 border border-gray-100 dark:border-gray-800"
   >

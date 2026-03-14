@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import BaseContainer from '~/components/ui/BaseContainer.vue'
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseTypography from '~/components/ui/BaseTypography.vue'
-
 const route = useRoute()
-const slug = route.params.slug || 'home'
+const slug = (route.params.slug as string[])?.join('/') || 'home'
 
-const { data: page, error } = await useFetch(`/api/v1/cms/pages/${slug}`)
+interface CmsPage {
+  title: string
+  content: string
+}
+
+const { data: page, error } = await useFetch<CmsPage>(`/api/v1/cms/pages/${slug}`)
 
 useHead({
   title: page.value?.title || 'Page'
@@ -15,20 +16,25 @@ useHead({
 
 <template>
   <NuxtLayout name="default">
-    <BaseContainer v-if="page" padding="lg">
-      <BaseBox class="max-w-4xl mx-auto">
-        <BaseTypography variant="h1" class="mb-8">{{ page.title }}</BaseTypography>
-        <BaseBox class="prose dark:prose-invert" v-html="page.content" />
-      </BaseBox>
-    </BaseContainer>
+    <div v-if="page" class="py-20 min-h-screen bg-white dark:bg-slate-950">
+      <UContainer>
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-12 tracking-tight border-b border-slate-100 dark:border-slate-800 pb-8">{{ page.title }}</h1>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div class="prose prose-slate dark:prose-invert max-w-none" v-html="page.content" />
+        </div>
+      </UContainer>
+    </div>
     
-    <BaseContainer v-else-if="error" padding="lg">
-      <BaseBox class="text-center py-20">
-        <BaseTypography variant="h1" class="mb-4 text-6xl">404</BaseTypography>
-        <BaseTypography variant="h2">Page Not Found</BaseTypography>
-        <BaseTypography variant="p" class="mt-4 mb-8">The page you are looking for does not exist or has been moved.</BaseTypography>
-        <BaseButton to="/">Go back home</BaseButton>
-      </BaseBox>
-    </BaseContainer>
+    <div v-else-if="error" class="py-40 min-h-screen bg-white dark:bg-slate-950">
+      <UContainer>
+        <div class="text-center flex flex-col items-center gap-6">
+          <h1 class="text-8xl font-black text-emerald-500/20 mb-4">404</h1>
+          <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Page Not Found</h2>
+          <p class="text-lg text-slate-500 dark:text-slate-400 max-w-md">The page you are looking for does not exist or has been moved.</p>
+          <UButton to="/" size="xl" color="primary" class="mt-4 px-10">Go back home</UButton>
+        </div>
+      </UContainer>
+    </div>
   </NuxtLayout>
 </template>

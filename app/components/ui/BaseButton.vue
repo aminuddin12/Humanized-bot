@@ -1,27 +1,28 @@
 <script setup lang="ts">
-import config from '~/configs/ui/base-button.json'
-import { resolveStyles } from '~/utils/ui'
+import boxConfig from '~/configs/layouts/box.json'
+import surfaceConfig from '~/configs/ui/surface.json'
+import { cn } from '~/utils/ui'
+import type { BoxLayoutAlias, SurfaceAlias } from '~/types/ui'
 
-interface Props {
-  variant?: string
-  size?: string
+const props = defineProps<{
+  layout?: BoxLayoutAlias
+  theme?: SurfaceAlias
   to?: string | null
   disabled?: boolean
-}
+  as?: string
+}>()
 
-const props = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
-  size: 'md',
-  to: null,
-  disabled: false
+const classes = computed(() => {
+  const baseClass = (boxConfig as Record<string, string>)['btn-base'] || ''
+  const layoutClass = props.layout ? (boxConfig as Record<string, string>)[props.layout] : (boxConfig as Record<string, string>)['btn-md']
+  const themeClass = props.theme ? (surfaceConfig as Record<string, string>)[props.theme] : (surfaceConfig as Record<string, string>)['btn-primary']
+  return cn(baseClass, layoutClass, themeClass)
 })
-
-const classes = computed(() => resolveStyles(config, props))
 </script>
 
 <template>
   <component
-    :is="to ? 'NuxtLink' : 'button'"
+    :is="to ? 'NuxtLink' : (as || 'button')"
     :to="to"
     :class="classes"
     :disabled="disabled"

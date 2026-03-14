@@ -1,0 +1,17 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
+  },
+  "features": {
+    "title": "Core Features",
+    "description": "Smart humanized bots for your business."
+  },
+  "errors": {
+    "unauthorized": "You are not authorized to access this resource.",
+    "not_found": "Resource not found.",
+    "server_error": "Internal server error occurred."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "common": {
+    "login": "Masuk",
+    "register": "Daftar",
+    "logout": "Keluar",
+    "dashboard": "Dasbor"
+  },
+  "features": {
+    "title": "Fitur Utama",
+    "description": "Bot cerdas manusiawi untuk bisnis Anda."
+  },
+  "errors": {
+    "unauthorized": "Anda tidak memiliki akses ke sumber daya ini.",
+    "not_found": "Sumber daya tidak ditemukan.",
+    "server_error": "Terjadi kesalahan pada server."
+  }
+}

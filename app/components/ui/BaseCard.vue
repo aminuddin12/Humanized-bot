@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import config from '~/configs/ui/base-card.json'
-import { resolveStyles } from '~/utils/ui'
+import boxConfig from '~/configs/layouts/box.json'
+import surfaceConfig from '~/configs/ui/surface.json'
+import { cn } from '~/utils/ui'
+import type { BoxLayoutAlias, SurfaceAlias } from '~/types/ui'
 
-interface Props {
-  variant?: string
-  padding?: string
-  radius?: string
+const props = defineProps<{
+  layout?: BoxLayoutAlias
+  theme?: SurfaceAlias
   as?: string
-}
+}>()
 
-const props = withDefaults(defineProps<Props>(), {
-  variant: 'default',
-  padding: 'md',
-  radius: '2xl',
-  as: 'div'
+const classes = computed(() => {
+  const layoutClass = props.layout ? (boxConfig as Record<string, string>)[props.layout] : ''
+  const themeClass = props.theme ? (surfaceConfig as Record<string, string>)[props.theme] : ''
+  return cn(layoutClass, themeClass)
 })
-
-const classes = computed(() => resolveStyles(config, props))
 </script>
 
 <template>
-  <component :is="as" :class="classes">
+  <component :is="as || 'div'" :class="classes">
     <slot />
   </component>
 </template>

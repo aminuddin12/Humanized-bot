@@ -1,63 +1,32 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-:root {
-  --alan-bg: #fafcfb;
-  --alan-surface: #e2f0ea;
-  --alan-surface-alt: #edf5f1;
-  --alan-dark: #0b1c15;
-  --alan-accent: #00d68f;
-  --alan-accent-dark: #00b377;
-  --alan-text: #1f2e28;
-  --alan-text-muted: #5c736a;
+@theme {
+  --color-alan-bg: #fafcfb;
+  --color-alan-surface: #e2f0ea;
+  --color-alan-surface-alt: #edf5f1;
+  --color-alan-dark: #0b1c15;
+  --color-alan-accent: #00d68f;
+  --color-alan-accent-dark: #00b377;
+  --color-alan-text: #1f2e28;
+  --color-alan-text-muted: #5c736a;
+
+  /* Dark Mode */
+  --color-dark-bg: #070f0c;
+  --color-dark-surface: #12241d;
+  --color-dark-surface-alt: #0d1a15;
+  --color-dark-text: #f0f5f2;
+  --color-dark-text-muted: #8ca69b;
+  --color-dark-border: #1f3d30;
 }
 
-.dark {
-  --alan-bg: #070f0c;
-  --alan-surface: #12241d;
-  --alan-surface-alt: #0d1a15;
-  --alan-text: #f0f5f2;
-  --alan-text-muted: #8ca69b;
+@layer base {
+  body {
+    @apply antialiased font-sans bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100;
+  }
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-.glass-header {
-  background: rgba(250, 252, 251, 0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-.dark .glass-header {
-  background: rgba(7, 15, 12, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.float-slow { animation: float-anim 6s ease-in-out infinite; }
-.float-fast { animation: float-anim 4s ease-in-out infinite alternate-reverse; }
-
-@keyframes float-anim {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-.journey-path {
-  stroke-dasharray: 10, 10;
-  animation: move-journey 2s linear infinite;
-}
-
-@keyframes move-journey { to { stroke-dashoffset: -20; } }
-
-.typing-cursor { animation: blink 1s step-end infinite; }
-
-@keyframes blink { 50% { opacity: 0; } }
-
-@keyframes marquee {
+@keyframes marquee-text {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
@@ -65,11 +34,5 @@ body {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 20s linear infinite;
-}
-
-.animate-marquee-slow {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
+  animation: marquee-text 30s linear infinite;
 }

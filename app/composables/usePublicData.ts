@@ -9,8 +9,17 @@ export const usePublicData = () => {
     colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
   }
 
-  const features = ref<BotFeature[]>(botData.features.list)
-  const activeFeature = ref<BotFeature>(features.value[0])
+  const features = ref<BotFeature[]>(botData.features.list as BotFeature[])
+  
+  // Ensure we have at least one feature
+  const activeFeature = ref<BotFeature>(features.value[0] || {
+    id: 'default',
+    name: 'Feature',
+    description: '',
+    icon: 'i-fluent-bot-24-filled',
+    isPremium: false
+  })
+
   const integrations = ref<IntegrationApp[]>(botData.integrations.list)
 
   const selectFeature = (feature: BotFeature) => {
@@ -24,6 +33,6 @@ export const usePublicData = () => {
     activeFeature,
     integrations,
     selectFeature,
-    pageData: botData as PageData
+    pageData: botData as unknown as PageData
   }
 }

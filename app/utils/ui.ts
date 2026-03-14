@@ -5,27 +5,35 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function resolveStyles(config: any, props: Record<string, any>) {
-  const activeClasses = [config.base]
+export function resolveStyles(config: Record<string, unknown>, props: Record<string, unknown>) {
+  const activeClasses: string[] = [(config.base as string) || '']
   
-  if (config.variants) {
-    Object.keys(config.variants).forEach((key) => {
-      const propValue = props[key]
-      const variantOptions = config.variants[key]
+  const variants = config.variants as Record<string, Record<string, string>> | undefined
+  const defaultVariants = config.defaultVariants as Record<string, string> | undefined
+
+  if (variants) {
+    Object.keys(variants).forEach((key) => {
+      const propValue = props[key] as string | undefined
+      const variantOptions = variants[key]
       
-      if (propValue && variantOptions[propValue]) {
+      if (propValue && variantOptions && variantOptions[propValue]) {
         activeClasses.push(variantOptions[propValue])
-      } else if (config.defaultVariants && config.defaultVariants[key]) {
-        activeClasses.push(variantOptions[config.defaultVariants[key]])
+      } else if (defaultVariants && defaultVariants[key] && variantOptions) {
+        const defaultKey = defaultVariants[key]
+        const defaultOption = variantOptions[defaultKey]
+        if (defaultOption) {
+          activeClasses.push(defaultOption)
+        }
       }
     })
   }
 
   // Handle slots if they exist
-  if (config.slots) {
+  const configSlots = config.slots as Record<string, string> | undefined
+  if (configSlots) {
     const slots: Record<string, string> = {}
-    Object.keys(config.slots).forEach((slotName) => {
-      const slotBase = config.slots[slotName]
+    Object.keys(configSlots).forEach((slotName) => {
+      const slotBase = configSlots[slotName]
       const slotClasses = [slotBase]
       
       // Slot variants could also be handled here if needed

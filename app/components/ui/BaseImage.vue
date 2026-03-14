@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const props = defineProps({
-  src: { type: String, required: true },
-  alt: { type: String, default: '' },
-  rounded: { type: String, default: 'none' }
-})
+defineProps<{
+  src: string
+  alt?: string
+  rounded?: 'none' | 'full' | 'xl' | '2xl'
+}>()
 
 const roundedClasses: Record<string, string> = {
   'none': 'rounded-none',
@@ -14,5 +14,5 @@ const roundedClasses: Record<string, string> = {
 </script>
 
 <template>
-  <img :src="src" :alt="alt" :class="roundedClasses[rounded]" />
+  <img :src="src" :alt="alt || ''" :class="roundedClasses[rounded || 'none']">
 </template>

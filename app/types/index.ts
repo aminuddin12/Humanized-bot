@@ -5,10 +5,12 @@ export interface Cta {
 
 export interface BotFeature {
   id: string
-  name: string
+  name?: string
+  title?: string
   description: string
   icon: string
-  isPremium: boolean
+  isPremium?: boolean
+  is_premium?: boolean
 }
 
 export interface PricingPlan {

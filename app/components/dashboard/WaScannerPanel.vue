@@ -27,8 +27,8 @@ const mockConnect = () => {
 </script>
 
 <template>
-  <BaseSurface variant="default" padding="xl" class="rounded-[2.5rem] border shadow-sm">
-    <BaseBox display="flex" flexDirection="col" alignItems="center" gap="lg" class="text-center">
+  <BaseSurface variant="primary" padding="xl" class="rounded-[2.5rem] border shadow-sm">
+    <BaseBox display="flex" flex-direction="col" align-items="center" gap="lg" class="text-center">
       <BaseBox>
         <BaseTypography variant="h3" class="mb-2">WhatsApp Scanner</BaseTypography>
         <BaseTypography variant="p" color="muted" class="text-sm">Link your WhatsApp account to start automating.</BaseTypography>
@@ -53,9 +53,9 @@ const mockConnect = () => {
       <!-- QR Ready State -->
       <BaseBox v-if="status === 'qr_ready'" class="flex flex-col items-center gap-6">
         <BaseBox class="p-4 bg-white rounded-3xl shadow-xl border-8 border-gray-50">
-          <img :src="qrCode" alt="QR Code" class="w-64 h-64" @click="mockConnect" />
+          <img :src="qrCode" alt="QR Code" class="w-64 h-64" @click="mockConnect" >
         </BaseBox>
-        <BaseBox display="flex" flexDirection="col" gap="xs">
+        <BaseBox display="flex" flex-direction="col" gap="xs">
           <BaseTypography variant="detail" class="text-[10px] font-black uppercase">Scan this QR Code</BaseTypography>
           <BaseTypography variant="p" class="text-xs text-emerald-600 font-bold">Awaiting device scan...</BaseTypography>
         </BaseBox>

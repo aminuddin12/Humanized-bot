@@ -34,7 +34,7 @@ const accept = () => {
       class="bottom-6 left-6 right-6 lg:left-auto lg:w-[400px] z-[90]"
     >
       <BaseSurface variant="glass" padding="md" class="rounded-[2rem] shadow-floating border flex flex-col gap-4">
-        <BaseBox display="flex" alignItems="center" gap="sm">
+        <BaseBox display="flex" align-items="center" gap="sm">
           <BaseBox background="dark" rounded="lg" class="w-8 h-8 flex items-center justify-center bg-emerald-500">
             <UIcon name="i-fluent-cookies-24-filled" class="text-white" />
           </BaseBox>

@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import config from '~/configs/ui/box.json'
-import { resolveStyles } from '~/utils/ui'
+import boxConfigs from '~/configs/layouts/box.json'
+import surfaceConfigs from '~/configs/ui/surface.json'
+import type { BoxLayoutAlias, SurfaceAlias } from '~/types/ui'
 
-const props = defineProps({
-  display: { type: String, default: null },
-  flexDirection: { type: String, default: null },
-  flexWrap: { type: String, default: null },
-  alignItems: { type: String, default: null },
-  justifyContent: { type: String, default: null },
-  gap: { type: String, default: null },
-  position: { type: String, default: null },
-  overflow: { type: String, default: null },
-  zIndex: { type: String, default: null },
-  inset: { type: String, default: null },
-  animation: { type: String, default: null },
-  background: { type: String, default: null },
-  as: { type: String, default: 'div' }
+const props = defineProps<{
+  layout?: BoxLayoutAlias
+  theme?: SurfaceAlias
+  as?: string
+  class?: string
+}>()
+
+const computedClasses = computed(() => {
+  return [
+    props.layout ? (boxConfigs as Record<string, string>)[props.layout] : '',
+    props.theme ? (surfaceConfigs as Record<string, string>)[props.theme] : '',
+    props.class
+  ].filter(Boolean).join(' ')
 })
-
-const classes = computed(() => resolveStyles(config, props))
 </script>
 
 <template>
-  <component :is="as" :class="classes">
+  <component :is="as || 'div'" :class="computedClasses">
     <slot />
   </component>
 </template>

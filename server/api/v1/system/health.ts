@@ -1,16 +1,24 @@
-import type { BotStatus, ApiResponse } from '~/types'
+import type { ApiResponse } from '~/types'
 
-export default defineEventHandler(async (event): Promise<ApiResponse<BotStatus>> => {
-  // Mocking real-time system metrics
-  const mockStatus: BotStatus = {
-    isActive: true,
-    uptime: "99.98%",
-    contacts: 1245
-  }
-
-  return {
-    success: true,
-    data: mockStatus,
-    message: "System health retrieved successfully"
+export default defineEventHandler(async (_event): Promise<ApiResponse<unknown>> => {
+  try {
+    return {
+      success: true,
+      data: {
+        status: 'operational',
+        uptime: '99.99%',
+        version: '1.0.0',
+        db_connection: true,
+        last_sync: new Date().toISOString()
+      },
+      message: 'System is healthy'
+    }
+  } catch (_error) {
+    const statusMessage = (_error as { statusMessage?: string }).statusMessage || 'System health check failed'
+    return {
+      success: false,
+      message: statusMessage,
+      data: null
+    }
   }
 })

@@ -1,27 +1,21 @@
 services:
-  db:
+  database:
     image: postgres:17-alpine
-    container_name: humanized_bot_db
-    restart: always
-    environment:
-      POSTGRES_USER: humanized_user
-      POSTGRES_PASSWORD: humanized_password
-      POSTGRES_DB: humanized_bot_engine
+    container_name: humanized_db
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  app:
-    image: node:24-alpine
-    container_name: humanized_bot_app
-    ports:
-      - "3000:3000"
     environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://humanized_user:humanized_password@db:5432/humanized_bot_engine?schema=public
-    depends_on:
-      - db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: humanized_bot
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - default
 
 volumes:
-  postgres_data:
+  pgdata:
+
+networks:
+  default:
+    driver: bridge

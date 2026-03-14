@@ -22,7 +22,7 @@ const classes = computed(() => resolveStyles(config, props))
 
 <template>
   <div :class="classes">
-    <div v-if="color === 'emerald'" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+    <div v-if="color === 'emerald'" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"/>
     <UIcon v-if="icon" :name="icon" />
     <span><slot /></span>
   </div>

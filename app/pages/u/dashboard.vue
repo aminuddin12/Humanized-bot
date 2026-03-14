@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import BaseGrid from '~/components/ui/BaseGrid.vue'
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseTypography from '~/components/ui/BaseTypography.vue'
-import BaseCard from '~/components/ui/BaseCard.vue'
-import BaseBadge from '~/components/ui/BaseBadge.vue'
-import WaScannerPanel from '~/components/dashboard/WaScannerPanel.vue'
-
 definePageMeta({ 
   layout: 'dashboard',
   middleware: 'auth'
 })
 
-useHead({ title: 'Dashboard | SaaS Bot' })
+useHead({ title: 'Dashboard | SaaSBot' })
 
 const stats = [
   { label: 'Total Messages', value: '12,840', trend: '+12%', icon: 'i-fluent-chat-multiple-24-regular' },
@@ -22,55 +15,56 @@ const stats = [
 </script>
 
 <template>
-  <BaseBox display="flex" flexDirection="col" gap="lg">
+  <div class="flex flex-col gap-8">
     <!-- Stats Grid -->
-    <BaseGrid cols="4" gap="md">
-      <BaseCard v-for="stat in stats" :key="stat.label" padding="lg" radius="2xl" class="shadow-sm">
-        <BaseBox display="flex" alignItems="center" justifyContent="between" class="mb-4">
-          <BaseBox background="dark" rounded="lg" class="w-10 h-10 flex items-center justify-center bg-gray-50 dark:bg-black/20">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <UCard v-for="stat in stats" :key="stat.label">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-900/30">
             <UIcon :name="stat.icon" class="text-xl text-emerald-500" />
-          </BaseBox>
-          <BaseBadge color="emerald" size="sm">{{ stat.trend }}</BaseBadge>
-        </BaseBox>
-        <BaseTypography variant="detail" color="muted" class="text-[10px] uppercase font-black">{{ stat.label }}</BaseTypography>
-        <BaseTypography variant="h2" class="text-2xl mt-1">{{ stat.value }}</BaseTypography>
-      </BaseCard>
-    </BaseGrid>
+          </div>
+          <UBadge color="emerald" variant="subtle" size="xs">{{ stat.trend }}</UBadge>
+        </div>
+        <div class="text-[10px] uppercase font-black text-slate-500">{{ stat.label }}</div>
+        <div class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">{{ stat.value }}</div>
+      </UCard>
+    </div>
 
     <!-- Main Section -->
-    <BaseGrid cols="2" gap="lg">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Left: WhatsApp Scanner -->
       <WaScannerPanel />
 
       <!-- Right: System Activity -->
-      <BaseCard padding="xl" radius="3xl" class="flex flex-col gap-6">
-        <BaseTypography variant="h3">System Activity</BaseTypography>
+      <UCard>
+        <template #header>
+          <h3 class="font-bold">System Activity</h3>
+        </template>
         
-        <BaseBox display="flex" flexDirection="col" gap="md">
-          <BaseBox v-for="i in 5" :key="i" display="flex" alignItems="center" gap="md" class="pb-4 border-b last:border-none">
-            <BaseBox background="dark" rounded="full" class="w-2 h-2 bg-emerald-500" />
-            <BaseBox class="flex-grow">
-              <BaseTypography variant="p" class="text-sm font-bold">New lead captured via WhatsApp</BaseTypography>
-              <BaseTypography variant="detail" color="muted" class="text-[10px]">2 minutes ago</BaseTypography>
-            </BaseBox>
-            <BaseTypography variant="detail" color="accent" class="text-[10px] font-black">ACTIVE</BaseTypography>
-          </BaseBox>
-        </BaseBox>
+        <div class="flex flex-col gap-6">
+          <div v-for="i in 5" :key="i" class="flex items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800 last:border-none">
+            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <div class="flex-grow">
+              <div class="text-sm font-bold">New lead captured via WhatsApp</div>
+              <div class="text-[10px] text-slate-500">2 minutes ago</div>
+            </div>
+            <UBadge size="xs" variant="outline" color="emerald">ACTIVE</UBadge>
+          </div>
+        </div>
 
         <!-- Mock Chart -->
-        <BaseBox class="mt-4 flex-grow bg-gray-50 dark:bg-black/20 rounded-2xl p-6 flex flex-col justify-end gap-2 min-h-[200px]">
-          <BaseBox display="flex" alignItems="end" justifyContent="between" class="h-32">
-            <BaseBox v-for="h in [40, 70, 50, 90, 60, 80, 100]" :key="h" 
-              background="dark" 
-              class="w-8 rounded-t-lg bg-emerald-500/40 hover:bg-emerald-500 transition-all cursor-pointer" 
+        <div class="mt-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 flex flex-col justify-end gap-2 min-h-[200px] border border-slate-100 dark:border-slate-800">
+          <div class="flex items-end justify-between h-32 gap-2">
+            <div v-for="h in [40, 70, 50, 90, 60, 80, 100]" :key="h" 
+              class="flex-grow rounded-t-lg bg-emerald-500/40 hover:bg-emerald-500 transition-all cursor-pointer" 
               :style="{ height: h + '%' }" 
             />
-          </BaseBox>
-          <BaseBox display="flex" justifyContent="between">
-            <BaseTypography v-for="d in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" :key="d" variant="detail" color="muted" class="w-8 text-center text-[9px]">{{ d }}</BaseTypography>
-          </BaseBox>
-        </BaseBox>
-      </BaseCard>
-    </BaseGrid>
-  </BaseBox>
+          </div>
+          <div class="flex justify-between">
+            <span v-for="d in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" :key="d" class="flex-grow text-center text-[9px] text-slate-500">{{ d }}</span>
+          </div>
+        </div>
+      </UCard>
+    </div>
+  </div>
 </template>

@@ -12,14 +12,14 @@ export const comparePassword = async (password: string, hash: string) => {
   return await bcrypt.compare(password, hash)
 }
 
-export const generateToken = (payload: any) => {
+export const generateToken = (payload: string | object | Buffer) => {
   return jwt.sign(payload, AUTH_SECRET, { expiresIn: TOKEN_EXPIRY })
 }
 
 export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, AUTH_SECRET)
-  } catch (error) {
+  } catch {
     return null
   }
 }

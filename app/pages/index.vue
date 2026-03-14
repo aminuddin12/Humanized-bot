@@ -1,48 +1,16 @@
-<script setup lang="ts">
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseContainer from '~/components/ui/BaseContainer.vue'
-import HeroSection from '~/components/public/HeroSection.vue'
-import RunningText from '~/components/blocks/RunningText.vue'
-import RunningBrands from '~/components/blocks/RunningBrands.vue'
-import FeatureGrid from '~/components/public/FeatureGrid.vue'
-import JourneySection from '~/components/public/JourneySection.vue'
-import { usePublicData } from '~/composables/usePublicData'
-
-const { pageData } = usePublicData()
-
-useHead({
-  title: 'Smart Humanized Bot - Leading AI SaaS Automation',
-  meta: [
-    { name: 'description', content: 'Transform your customer support with human-like AI bots.' }
-  ]
-})
-</script>
-
 <template>
-  <NuxtLayout name="default">
-    <BaseBox class="w-full">
-      
-      <!-- Hero Section -->
-      <HeroSection v-bind="pageData.hero" />
-
-      <!-- Running Text (Marquee) -->
-      <RunningText text="Humanized AI . Scalable SaaS . 24/7 Automation . Multi-Channel Support . Smart Integrations" />
-
-      <!-- Running Brands -->
-      <RunningBrands />
-
-      <!-- Features -->
-      <FeatureGrid 
-        title="Everything you need to scale." 
-        description="Our platform provides all the tools necessary to automate your customer interactions at any scale."
-      />
-
-      <!-- Journey -->
-      <JourneySection />
-
-      <!-- Running Text Slow -->
-      <RunningText text="Trusted by 1000+ Companies Globally . Get Started Today" speed="slow" />
-
-    </BaseBox>
-  </NuxtLayout>
+  <div class="min-h-screen bg-white dark:bg-slate-950">
+    <UContainer class="py-20 md:py-32 text-center flex flex-col items-center">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 max-w-4xl">
+        Automate Your Customer Journey with <span class="text-emerald-500">AI Precision</span>
+      </h1>
+      <h2 class="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-2xl font-normal">
+        Deploy a humanized bot in minutes. Handle support, sales, and operations 24/7 without losing the personal touch.
+      </h2>
+      <div class="flex items-center justify-center gap-4">
+        <UButton to="/register" size="xl" color="primary">Start Free Trial</UButton>
+        <UButton to="/demo" size="xl" variant="outline" color="gray">View Demo</UButton>
+      </div>
+    </UContainer>
+  </div>
 </template>

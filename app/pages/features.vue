@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import BaseContainer from '~/components/ui/BaseContainer.vue'
-import BaseGrid from '~/components/ui/BaseGrid.vue'
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseTypography from '~/components/ui/BaseTypography.vue'
-import BaseCard from '~/components/ui/BaseCard.vue'
-import BaseIconWrapper from '~/components/ui/BaseIconWrapper.vue'
-import BaseBadge from '~/components/ui/BaseBadge.vue'
 import type { BotFeature, ApiResponse } from '~/types'
 
 const { data: response } = await useFetch<ApiResponse<{ title: string, description: string, list: BotFeature[] }>>('/api/v1/public/features')
@@ -21,61 +14,35 @@ useHead({
 
 <template>
   <NuxtLayout name="default">
-    <BaseBox position="relative" class="w-full overflow-hidden">
-      <!-- Visual Sample: Glowing Background from Template -->
-      <BaseBox 
-        position="absolute" 
-        class="top-[-5%] left-1/2 -translate-x-1/2 w-[70vw] h-[50vw] rounded-full blur-[120px] pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen opacity-20"
-        background="emerald"
-      />
+    <div class="py-20 bg-white dark:bg-slate-950 min-h-screen">
+      <UContainer>
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <UBadge color="emerald" variant="subtle" size="lg" class="mb-4">Capabilities</UBadge>
+          <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">{{ title }}</h1>
+          <p class="text-lg text-slate-500 dark:text-slate-400">{{ description }}</p>
+        </div>
 
-      <BaseContainer padding="lg" class="relative z-10">
-        <BaseBox display="flex" flexDirection="col" alignItems="center" gap="sm" class="mb-20 text-center max-w-4xl mx-auto">
-          <!-- Visual Sample: Animated Badge from Template -->
-          <BaseBadge color="emerald" class="mb-4 animate-bounce">
-            <BaseBox display="flex" alignItems="center" gap="xs">
-              <UIcon name="i-fluent-bot-24-filled" />
-              SaaS Engine Pro
-            </BaseBox>
-          </BaseBadge>
-          
-          <BaseTypography variant="h1" align="center">
-            {{ title }}
-          </BaseTypography>
-          
-          <BaseTypography variant="p" align="center">
-            {{ description }}
-          </BaseTypography>
-        </BaseBox>
-
-        <!-- Adaptive Grid: 1 on Mobile, 2 on Tablet, 3 on Desktop -->
-        <BaseGrid cols="3" gap="lg">
-          <BaseCard 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <UCard 
             v-for="feature in features" 
-            :key="feature.id" 
-            padding="xl" 
-            radius="3xl" 
-            class="group hover:border-alan-accent transition-all duration-500 h-full flex flex-col"
+            :key="feature.id"
+            class="hover:shadow-lg transition-all duration-300"
           >
-            <!-- Visual Sample: Icon Wrapper with scaling from Template -->
-            <BaseIconWrapper 
-              :icon="feature.icon" 
-              color="dark" 
-              size="lg" 
-              class="mb-8 group-hover:scale-110 transition-transform shadow-sm" 
-            />
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-emerald-50 dark:bg-emerald-900/30 mb-6">
+              <UIcon :name="feature.icon" class="text-2xl text-emerald-500" />
+            </div>
             
-            <BaseBox display="flex" alignItems="center" gap="sm" class="mb-4">
-              <BaseTypography variant="h3">{{ feature.name }}</BaseTypography>
-              <BaseBadge v-if="feature.isPremium" color="blue" size="sm">Pro</BaseBadge>
-            </BaseBox>
+            <div class="flex items-center gap-2 mb-4">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ feature.name }}</h3>
+              <UBadge v-if="feature.isPremium" size="xs" variant="solid" color="blue">Pro</UBadge>
+            </div>
             
-            <BaseTypography variant="p" color="muted" class="text-sm flex-grow">
+            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
               {{ feature.description }}
-            </BaseTypography>
-          </BaseCard>
-        </BaseGrid>
-      </BaseContainer>
-    </BaseBox>
+            </p>
+          </UCard>
+        </div>
+      </UContainer>
+    </div>
   </NuxtLayout>
 </template>

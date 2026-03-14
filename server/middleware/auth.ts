@@ -1,13 +1,19 @@
 import { verifyToken } from '../utils/auth'
 
 export default defineEventHandler(async (event) => {
-  // Only protect /api/v1 paths, excluding public/auth routes
   const path = getRequestPath(event)
-  const isProtected = path.startsWith('/api/v1/') && 
-                      !path.startsWith('/api/v1/auth/') && 
-                      !path.startsWith('/api/v1/public/')
+  
+  // Bypass untuk endpoint publik
+  if (
+    path.startsWith('/api/v1/system/health') || 
+    path.startsWith('/api/v1/public') ||
+    path.startsWith('/api/v1/auth/')
+  ) {
+    return
+  }
 
-  if (!isProtected) return
+  // Only protect other /api/v1 paths
+  if (!path.startsWith('/api/v1/')) return
 
   const authHeader = getRequestHeader(event, 'Authorization')
   
@@ -18,7 +24,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const token = authHeader?.split(' ')[1]
+  const token = authHeader.split(' ')[1]
 
   if (!token) {
     throw createError({

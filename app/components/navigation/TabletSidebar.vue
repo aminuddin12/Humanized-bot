@@ -17,11 +17,11 @@ const isCollapsed = ref(false)
     class="fixed top-0 left-0 bottom-0 z-50 transition-all duration-300 flex flex-col h-full"
     :class="isCollapsed ? 'w-20' : 'w-64'"
   >
-    <BaseBox padding="md" display="flex" alignItems="center" justifyContent="between" class="h-20 border-b border-gray-100 dark:border-gray-800">
-      <NuxtLink to="/" v-if="!isCollapsed" class="flex items-center gap-2">
+    <BaseBox padding="md" display="flex" align-items="center" justify-content="between" class="h-20 border-b border-gray-100 dark:border-gray-800">
+      <NuxtLink v-if="!isCollapsed" to="/" class="flex items-center gap-2">
         <BaseTypography variant="h3" as="span" class="text-xl tracking-tighter text-gray-900 dark:text-white">SaaS<BaseTypography variant="span" color="accent">Bot</BaseTypography></BaseTypography>
       </NuxtLink>
-      <BaseBox v-else background="dark" rounded="xl" display="flex" alignItems="center" justifyContent="center" class="w-10 h-10">
+      <BaseBox v-else background="dark" rounded="xl" display="flex" align-items="center" justify-content="center" class="w-10 h-10">
         <UIcon name="i-fluent-bot-24-filled" class="text-xl text-emerald-500" />
       </BaseBox>
       <BaseButton variant="ghost" size="sm" @click="isCollapsed = !isCollapsed">
@@ -29,7 +29,7 @@ const isCollapsed = ref(false)
       </BaseButton>
     </BaseBox>
 
-    <BaseBox display="flex" flexDirection="col" gap="sm" padding="sm" class="flex-grow">
+    <BaseBox display="flex" flex-direction="col" gap="sm" padding="sm" class="flex-grow">
       <NuxtLink 
         v-for="link in menuItems" 
         :key="link.to" 

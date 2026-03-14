@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import BaseContainer from '~/components/ui/BaseContainer.vue'
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseTypography from '~/components/ui/BaseTypography.vue'
-import BaseGrid from '~/components/ui/BaseGrid.vue'
-import BaseCard from '~/components/ui/BaseCard.vue'
-import BaseIconWrapper from '~/components/ui/BaseIconWrapper.vue'
-
 const solutions = [
   { title: 'Customer Support', desc: 'Automate 80% of routine inquiries with human-like responses.', icon: 'i-fluent-chat-help-24-filled' },
   { title: 'Sales Automation', desc: 'Qualify leads and book meetings directly within the chat.', icon: 'i-fluent-money-hand-24-filled' },
@@ -15,37 +8,43 @@ const solutions = [
   { title: 'API Integrations', desc: 'Connect with your existing CRM and backend systems.', icon: 'i-fluent-puzzle-piece-24-filled' }
 ]
 
-useHead({ title: 'Solutions | SaaS Bot' })
+useHead({ title: 'Solutions | SaaS Humanized-Bot' })
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <BaseContainer padding="lg">
-      <BaseBox class="text-center max-w-3xl mx-auto mb-20">
-        <BaseTypography variant="h1" class="mb-6">Empowering Your Business with <BaseTypography variant="span" color="accent">AI Solutions.</BaseTypography></BaseTypography>
-        <BaseTypography variant="p">
-          Discover how SaaS Bot can transform your operations and enhance customer satisfaction across all digital touchpoints.
-        </BaseTypography>
-      </BaseBox>
+    <div class="py-20 bg-white dark:bg-slate-950 min-h-screen">
+      <UContainer>
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+            Empowering Your Business with <span class="text-emerald-500">AI Solutions.</span>
+          </h1>
+          <p class="text-lg text-slate-500 dark:text-slate-400">
+            Discover how SaaS Bot can transform your operations and enhance customer satisfaction across all digital touchpoints.
+          </p>
+        </div>
 
-      <BaseGrid cols="3" gap="lg">
-        <BaseCard v-for="sol in solutions" :key="sol.title" padding="xl" radius="3xl" class="group hover:border-alan-accent transition-all duration-500">
-          <BaseIconWrapper :icon="sol.icon" color="dark" size="lg" class="mb-8 group-hover:scale-110 transition-transform" />
-          <BaseTypography variant="h3" class="mb-4">{{ sol.title }}</BaseTypography>
-          <BaseTypography variant="p" color="muted" class="text-sm">
-            {{ sol.desc }}
-          </BaseTypography>
-        </BaseCard>
-      </BaseGrid>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <UCard v-for="sol in solutions" :key="sol.title" class="group hover:ring-2 hover:ring-emerald-500 transition-all duration-300">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-900 dark:bg-black mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+              <UIcon :name="sol.icon" class="text-2xl text-emerald-500" />
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">{{ sol.title }}</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              {{ sol.desc }}
+            </p>
+          </UCard>
+        </div>
 
-      <BaseBox background="dark" class="mt-32 p-12 md:p-20 rounded-[3rem] text-center relative overflow-hidden">
-        <BaseBox position="absolute" class="inset-0 bg-emerald-500/10 blur-[100px] pointer-events-none" />
-        <BaseTypography variant="h2" color="white" class="mb-8 relative z-10">Ready to transform your workflow?</BaseTypography>
-        <BaseBox display="flex" justifyContent="center" gap="md" class="relative z-10">
-          <BaseButton size="lg">Get Started Free</BaseButton>
-          <BaseButton variant="outline" size="lg" class="text-white border-white/20 hover:bg-white/10">Talk to Sales</BaseButton>
-        </BaseBox>
-      </BaseBox>
-    </BaseContainer>
+        <div class="mt-32 p-12 md:p-20 rounded-[3rem] text-center bg-slate-900 dark:bg-black relative overflow-hidden">
+          <div class="absolute inset-0 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
+          <h2 class="text-3xl md:text-5xl font-black text-white mb-8 relative z-10 tracking-tight">Ready to transform your workflow?</h2>
+          <div class="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+            <UButton size="xl" color="primary" class="px-10">Get Started Free</UButton>
+            <UButton size="xl" variant="outline" color="white" class="px-10">Talk to Sales</UButton>
+          </div>
+        </div>
+      </UContainer>
+    </div>
   </NuxtLayout>
 </template>

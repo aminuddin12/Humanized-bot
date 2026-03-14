@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import BaseBox from '~/components/ui/BaseBox.vue'
-import BaseSurface from '~/components/ui/BaseSurface.vue'
-import BaseTypography from '~/components/ui/BaseTypography.vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import ThemeToggle from '~/components/ui/ThemeToggle.vue'
-import { useAuth } from '~/composables/useAuth'
+import type { User } from '~/composables/useAuth'
 
 const { user, logout } = useAuth()
 
@@ -18,61 +13,69 @@ const sidebarLinks = [
 </script>
 
 <template>
-  <BaseBox as="div" class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 min-h-screen flex">
+  <div class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex">
     
     <!-- Sidebar -->
-    <BaseSurface as="aside" variant="sidebar" class="w-64 fixed top-0 left-0 bottom-0 z-50 border-r flex flex-col hidden lg:flex">
-      <BaseBox padding="md" class="h-20 border-b flex items-center gap-2">
-        <BaseBox background="dark" rounded="lg" class="w-8 h-8 flex items-center justify-center">
-          <UIcon name="i-fluent-bot-24-filled" class="text-emerald-500" />
-        </BaseBox>
-        <BaseTypography variant="h3" class="text-lg tracking-tighter">SaaS<BaseTypography variant="span" color="accent">Bot</BaseTypography></BaseTypography>
-      </BaseBox>
+    <aside class="w-64 fixed top-0 left-0 bottom-0 z-50 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col hidden lg:flex">
+      <div class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 px-6">
+        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+          <UIcon name="i-fluent-bot-24-filled" class="text-white text-xl" />
+        </div>
+        <span class="font-bold text-lg tracking-tight">SaaSBot</span>
+      </div>
 
-      <BaseBox display="flex" flexDirection="col" gap="xs" padding="sm" class="flex-grow mt-4">
+      <nav class="flex flex-col gap-1 p-4 flex-grow">
         <NuxtLink 
           v-for="link in sidebarLinks" 
           :key="link.to" 
           :to="link.to"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group"
+          class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group"
           active-class="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-bold"
         >
           <UIcon :name="link.icon" class="text-xl" />
-          <BaseTypography variant="detail" class="text-sm font-medium">{{ link.label }}</BaseTypography>
+          <span class="text-sm font-medium">{{ link.label }}</span>
         </NuxtLink>
-      </BaseBox>
+      </nav>
 
-      <BaseBox padding="md" class="border-t">
-        <BaseButton variant="ghost" class="w-full justify-start gap-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20" @click="logout">
-          <UIcon name="i-fluent-arrow-exit-24-regular" />
+      <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+        <UButton 
+          variant="ghost" 
+          color="red" 
+          block 
+          icon="i-fluent-arrow-exit-24-regular"
+          class="justify-start"
+          @click="logout"
+        >
           Logout
-        </BaseButton>
-      </BaseBox>
-    </BaseSurface>
+        </UButton>
+      </div>
+    </aside>
 
     <!-- Main Content Area -->
-    <BaseBox class="flex-grow lg:pl-64 flex flex-col">
+    <div class="flex-grow lg:pl-64 flex flex-col">
       <!-- Header -->
-      <BaseSurface as="header" variant="glass" class="h-20 border-b sticky top-0 z-40 flex items-center justify-between px-8">
-        <BaseTypography variant="h3" class="text-lg capitalize">{{ $route.path.split('/').pop()?.replace('-', ' ') }}</BaseTypography>
+      <header class="h-16 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 flex items-center justify-between px-8 bg-white/75 dark:bg-slate-900/75 backdrop-blur">
+        <h3 class="font-bold text-lg capitalize">{{ $route.path.split('/').pop()?.replace('-', ' ') }}</h3>
         
-        <BaseBox display="flex" alignItems="center" gap="md">
+        <div class="flex items-center gap-4">
           <ThemeToggle />
-          <BaseBox display="flex" alignItems="center" gap="sm" class="pl-4 border-l">
-            <BaseBox background="dark" rounded="full" class="w-8 h-8 bg-gray-200 dark:bg-gray-800" />
-            <BaseBox display="flex" flexDirection="col">
-              <BaseTypography variant="detail" class="text-[10px] font-black uppercase">{{ user?.name || 'Guest' }}</BaseTypography>
-              <BaseTypography variant="detail" color="muted" class="text-[9px] lowercase opacity-60">{{ user?.email }}</BaseTypography>
-            </BaseBox>
-          </BaseBox>
-        </BaseBox>
-      </BaseSurface>
+          <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+              <UIcon name="i-fluent-person-24-regular" />
+            </div>
+            <div class="flex flex-col">
+              <span class="text-xs font-bold uppercase tracking-tight">{{ (user as User)?.name || 'Guest' }}</span>
+              <span class="text-[10px] text-slate-500 lowercase">{{ (user as User)?.email }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <!-- Page Content -->
-      <BaseBox as="main" padding="lg" class="flex-grow">
+      <main class="p-8 flex-grow">
         <slot />
-      </BaseBox>
-    </BaseBox>
+      </main>
+    </div>
 
-  </BaseBox>
+  </div>
 </template>
