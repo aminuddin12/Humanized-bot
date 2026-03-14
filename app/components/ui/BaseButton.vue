@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import boxConfig from '~/configs/layouts/box.json'
-import surfaceConfig from '~/configs/ui/surface.json'
-import { cn } from '~/utils/ui'
-import type { BoxLayoutAlias, SurfaceAlias } from '~/types/ui'
+import buttonConfig from '~/configs/ui/base-button.json'
+import { resolveStyles } from '~/utils/ui'
+import type { ButtonVariant, ButtonSize } from '~/types/ui'
 
 const props = defineProps<{
-  layout?: BoxLayoutAlias
-  theme?: SurfaceAlias
+  variant?: ButtonVariant
+  size?: ButtonSize
   to?: string | null
   disabled?: boolean
   as?: string
 }>()
 
-const classes = computed(() => {
-  const baseClass = (boxConfig as Record<string, string>)['btn-base'] || ''
-  const layoutClass = props.layout ? (boxConfig as Record<string, string>)[props.layout] : (boxConfig as Record<string, string>)['btn-md']
-  const themeClass = props.theme ? (surfaceConfig as Record<string, string>)[props.theme] : (surfaceConfig as Record<string, string>)['btn-primary']
-  return cn(baseClass, layoutClass, themeClass)
-})
+const classes = computed(() => resolveStyles(buttonConfig, props))
 </script>
 
 <template>

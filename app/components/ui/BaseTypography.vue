@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import typographyConfig from '~/configs/ui/typography.json'
-import { cn } from '~/utils/ui'
+import { resolveStyles } from '~/utils/ui'
 import type { TypographyAlias } from '~/types/ui'
 
 const props = defineProps<{
@@ -14,13 +14,11 @@ const tag = computed(() => {
   return 'span'
 })
 
-const classes = computed(() => {
-  return props.variant ? (typographyConfig as Record<string, string>)[props.variant] : ''
-})
+const classes = computed(() => resolveStyles(typographyConfig, props))
 </script>
 
 <template>
-  <component :is="tag" :class="cn(classes)">
+  <component :is="tag" :class="classes">
     <slot />
   </component>
 </template>

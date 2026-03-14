@@ -5,14 +5,17 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "npx kill-port 3000 && nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "prisma generate",
     "preview": "nuxt preview",
     "test": "vitest run",
     "start": "npx kill-port 3000 && node .output/server/index.mjs",
     "db:seed": "npx tsx prisma/seeders/seed.ts",
-    "postinstall": "nuxt prepare",
+    "postinstall": "prisma generate && nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
+  },
+  "prisma": {
+    "schema": "prisma/schema"
   },
   "dependencies": {
     "@nuxt/a11y": "^1.0.0-alpha.1",

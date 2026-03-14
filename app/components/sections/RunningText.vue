@@ -5,26 +5,14 @@ defineProps<{
 </script>
 
 <template>
-  <div class="py-6 overflow-hidden bg-slate-900 dark:bg-black border-y border-white/5">
+  <div class="py-12 overflow-hidden bg-secondary border-y border-white/5 relative z-10">
     <div class="flex whitespace-nowrap animate-marquee">
-      <div v-for="i in 10" :key="i" class="flex items-center gap-8 px-4">
-        <span class="text-lg font-black uppercase tracking-tighter text-white opacity-30">
+      <div v-for="i in 10" :key="i" class="flex items-center gap-12 px-6">
+        <span class="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white opacity-20">
           {{ text }}
         </span>
-        <UIcon name="i-fluent-star-24-filled" class="text-emerald-500 opacity-20" />
+        <UIcon name="i-fluent-star-24-filled" class="text-primary opacity-40 text-2xl" />
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-@keyframes marquee-text {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee-text 30s linear infinite;
-}
-</style>

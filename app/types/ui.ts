@@ -1,7 +1,12 @@
-import type boxConfig from '~/configs/layouts/box.json'
-import type surfaceConfig from '~/configs/ui/surface.json'
-import type typographyConfig from '~/configs/ui/typography.json'
+export type ButtonVariant = 'primary' | 'secondary' | 'white' | 'glass' | 'outline' | 'ghost'
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
-export type BoxLayoutAlias = keyof typeof boxConfig
-export type SurfaceAlias = keyof typeof surfaceConfig
-export type TypographyAlias = keyof typeof typographyConfig
+export type CardVariant = 'default' | 'glass' | 'surface' | 'featured' | 'white'
+export type CardPadding = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+export type CardRadius = 'none' | 'xl' | '2xl' | '3xl' | '4xl' | 'full'
+
+export type TypographyAlias = 'h1' | 'h2' | 'h3' | 'p' | 'detail' | 'span'
+
+// Keep existing aliases if they are used elsewhere, but these new ones are more specific
+export type BoxLayoutAlias = string
+export type SurfaceAlias = string
